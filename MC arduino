@@ -1,0 +1,48 @@
+#include <Wire.h>
+
+const int rc1 = 5; // RC1 add on wire: GREEN 
+const int rc2 = 6; // red wire    RC2
+const int n = 2000;
+
+int numRec = 0;
+#define SLAVE_ADDRESS 0x06;
+
+
+
+void setup() {
+  // put your setup code here, to run once:
+
+  Serial.begin(9600);
+  // begain as a slave
+  Wire.onReceive(recvEvent);
+
+  Serial.println("ready");
+  
+  pinMode(rc1, OUTPUT);
+  pinMode(rc2, OUTPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  Serial.println("In recEvent ");
+
+  int x = 600;
+
+  digitalWrite(rc1, HIGH);
+  digitalWrite(rc2, HIGH);
+  delayMicroseconds (n-x);
+  digitalWrite(rc1, LOW);
+  digitalWrite(rc2, LOW);
+  delayMicroseconds (x);
+
+}
+
+void recvEvent(int numRec)
+{
+  while (Wire.available())
+  {
+    numRec = Wire.read();
+    Serial.println("number received ");
+    Serial.println(numRec);
+  }
+}
